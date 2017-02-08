@@ -3,17 +3,37 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <head>
 <script type="text/javascript">
-var colors = ['#ff0000', '#00ff00', "#0000ff", "#afaf00", "#af00af", "#00afaf", "#ef7f3f", "#7f7f7f"];
+
+function adjust_maxmoves(fieldsize, ncolors) {
+	return Math.floor(30 * (fieldsize * ncolors) / (17 * 6));
+}
+
+function realloc_field(fieldsize) {
+	field = new Array(fieldsize);
+
+	for (var i = 0; i < fieldsize; i++) {
+		field[i] = new Array(fieldsize);
+	}
+}
+
+var running = true;
+var colors = [
+	"#E63A3F",
+	"#708CFD",
+	"#359C35",
+	"#FFCE2C",
+	"#FF6F43",
+	"#A13CB1",
+	"#38FFFF",
+	"#f2739d"
+];
 var ncolors = 4; // 6, 8
 var fieldsize = 12; // 18, 24
-var maxmoves = 14;
+var maxmoves = adjust_maxmoves(fieldsize, ncolors);
 var moves = maxmoves;
-var canvassize = 400;
-var field = new Array(fieldsize);
-var running = true;
-for (var i = 0; i < fieldsize; i++) {
-	field[i] = new Array(fieldsize);
-}
+var canvassize = 504;
+var field;
+realloc_field(fieldsize);
 
 function initfield() {
 	for (var j = 0; j < fieldsize; j++) {
@@ -146,6 +166,19 @@ function init() {
 	restart();
 }
 
+function change_settings() {
+	ncolors = document.querySelector('input[name="r_ncolors"]:checked').value;
+	fieldsize = document.querySelector('input[name="r_fieldsize"]:checked').value;
+	maxmoves = adjust_maxmoves(fieldsize, ncolors);
+	realloc_field(fieldsize);
+
+	init();
+}
+
+function open_settings() {
+	
+}
+
 </script>
 <style>
 .move_button {
@@ -160,7 +193,7 @@ function init() {
 }
 
 #outer {
-	display: inline;
+	display: block;
 }
 
 #navbar #buttons {
@@ -173,7 +206,7 @@ function init() {
 	align: left;
 }
 
-#restart {
+#restart #settings {
 	align: right;
     border: none;
     padding: 10px 15px;
@@ -197,12 +230,33 @@ function init() {
 	<div id="outer">
 		<div id="navbar">
 			<div id="move_counter"></div>
-			<button type="button" id="restart" onclick="restart()">Restart</button>
+			<button type="button" id="settings" onclick="open_settings()">Settings</button>
+			<button type="button" id="restart"  onclick="restart()">Restart</button>
 		</div>
 		<div id="field">
 			<canvas id="cfield" style="border:1px solid #000000;"></canvas>
 		</div>
 		<div id="buttons"></div>
+	</div>
+	<div id="settings_wrapper">
+		<div id="settings_content">
+			<p>Settings</p>
+			<form id="settings_form">
+				<fieldset>
+					<legend>Board size</legend>
+					<input type="radio" name="r_fieldsize" value="12" checked> 12 &nbsp;&nbsp;
+					<input type="radio" name="r_fieldsize" value="18"> 18 &nbsp;&nbsp;
+					<input type="radio" name="r_fieldsize" value="24"> 24
+				</fieldset>
+				<fieldset>
+					<legend>Colors</legend>
+					<input type="radio" name="r_ncolors" value="4" checked> 4 &nbsp;&nbsp;
+					<input type="radio" name="r_ncolors" value="6"> 6 &nbsp;&nbsp;
+					<input type="radio" name="r_ncolors" value="8"> 8
+				</fieldset>
+				<p><button type="button" id="apply_settings" onclick="change_settings()">Apply</button></p>
+			</form>
+		</div>
 	</div>
 </body>
 </html>
