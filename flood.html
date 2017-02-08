@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+<script type="text/javascript">
+var colors = ['#ff0000', '#00ff00', "#0000ff", "#afaf00", "#af00af", "#00afaf", "#ef7f3f", "#7f7f7f"];
+var ncolors = 4; // 6, 8
+var fieldsize = 12; // 18, 24
+var maxmoves = 14;
+var moves = maxmoves;
+var canvassize = 400;
+var field = new Array(fieldsize);
+var running = true;
+for (var i = 0; i < fieldsize; i++) {
+	field[i] = new Array(fieldsize);
+}
+
+function initfield() {
+	for (var j = 0; j < fieldsize; j++) {
+		for (var i = 0; i < fieldsize; i++) {
+			field[i][j] = Math.floor(Math.random() * ncolors);
+		}
+	}
+	
+}
+
+function drawfield() {
+	var cfield = document.getElementById("cfield");  
+	var ctx = cfield.getContext("2d");
+	var ps = canvassize / fieldsize;
+	for (var j = 0; j < fieldsize; j++) {
+		for (var i = 0; i < fieldsize; i++) {
+			ctx.fillStyle = colors[field[i][j]];
+			ctx.fillRect(i*ps, j*ps, ps, ps); 
+		}
+	}
+}
+
+function update_counter() {
+	document.getElementById("move_counter").innerHTML = moves+"/"+maxmoves;
+}
+
+function check_won() {
+	start_color = field[0][0];
+	for (var j = 0; j < fieldsize; j++) {
+		for (var i = 0; i < fieldsize; i++) {
+			if (field[i][j] != start_color) {
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+function flood_fill(fill_color) {
+	pixel_stack = [[0, 0]];
+	start_color = field[0][0];
+
+	while (pixel_stack.length) {
+		var newPos = pixel_stack.pop();
+		var x = newPos[0];
+		var y = newPos[1];
+		var marked_left = false;
+		var marked_right = false;
+
+		while (y >= 0 && field[x][y] == start_color) {
+			y--;
+		}
+		y++;
+
+		while (y < fieldsize  && field[x][y] == start_color) {
+			field[x][y] = fill_color;
+
+			if (x > 0) {
+				if (field[x - 1][y] == start_color) {
+					if (!marked_left) {
+						pixel_stack.push([x - 1, y]);
+						marked_left = true;
+					}
+				} else if (marked_left) {
+					marked_left = false;
+				}
+			}
+
+			if (x < fieldsize - 1) {
+				if (field[x + 1][y] == start_color) {
+					if (!marked_right) {
+						pixel_stack.push([x + 1, y]);
+						marked_right = true;
+					}
+				} else if (marked_right) {
+					marked_right = false;
+				}
+			}
+			y++;
+		}
+	}
+}
+
+function move(idx) {
+	if (!running) {
+		return;
+	}
+	moves--;
+
+	flood_fill(idx);
+	drawfield();
+
+	update_counter();
+
+	if (moves == 0) {
+		alert("No more moves");
+		running = false;
+	} else if (check_won()) {
+		alert("You won!");
+		running = false;
+	}
+}
+
+function restart() {
+	moves = maxmoves;
+	initfield();
+	drawfield();
+	update_counter();
+	running = true;
+}
+
+function init() {
+	var buttons_str = '';
+	for (i = 0; i < ncolors; i++) {
+		buttons_str = buttons_str + ' <button type="button" class="move_button" id="button_'+i+'" onclick="move('+i+')">&nbsp</button>';
+	}
+	document.getElementById("buttons").innerHTML = buttons_str;
+
+	for (i = 0; i < ncolors; i++) {
+		document.getElementById("button_"+i).style.background=colors[i];
+	}
+
+
+	var cfield = document.getElementById("cfield");  
+	cfield.width = canvassize;
+	cfield.height = canvassize;
+
+	update_counter();
+
+	restart();
+}
+
+</script>
+<style>
+.move_button {
+    border: none;
+    padding: 15px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+#outer {
+	display: inline;
+}
+
+#navbar #buttons {
+	display: inline;
+	width: 402px;
+}
+
+#move_counter {
+	display: inline;
+	align: left;
+}
+
+#restart {
+	align: right;
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background: "#3f3f3f";
+}
+
+#move_counter {
+	font-size: 20px;
+	font-family: sans-serif;
+}
+
+</style>
+</head>
+<body onload="init()">
+	<div id="outer">
+		<div id="navbar">
+			<div id="move_counter"></div>
+			<button type="button" id="restart" onclick="restart()">Restart</button>
+		</div>
+		<div id="field">
+			<canvas id="cfield" style="border:1px solid #000000;"></canvas>
+		</div>
+		<div id="buttons"></div>
+	</div>
+</body>
+</html>
