@@ -128,11 +128,11 @@ function move(idx) {
 
 	update_counter();
 
-	if (moves == 0) {
-		alert("No more moves");
-		running = false;
-	} else if (check_won()) {
+	if (check_won()) {
 		alert("You won!");
+		running = false;
+	} else if (moves == 0) {
+		alert("No more moves");
 		running = false;
 	}
 }
