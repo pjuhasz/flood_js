@@ -11,6 +11,13 @@ Clicking one of the colored buttons below the board will flood-fill the contiguo
 By choosing the right sequence of color changes you can gradually enlarge that area.
 The goal is to paint the entire board with a single color - within a pre-determined number of steps.
 
+![Example screenshot](example1.png)
+
+Installation
+------------
+
+Clone the repo or just download [flood.html](flood.html) and open it in the browser.
+
 Excuses^WMotivation
 -------------------
 
