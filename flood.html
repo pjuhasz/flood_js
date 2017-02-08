@@ -41,7 +41,6 @@ function initfield() {
 			field[i][j] = Math.floor(Math.random() * ncolors);
 		}
 	}
-	
 }
 
 function drawfield() {
@@ -156,7 +155,6 @@ function init() {
 		document.getElementById("button_"+i).style.background=colors[i];
 	}
 
-
 	var cfield = document.getElementById("cfield");  
 	cfield.width = canvassize;
 	cfield.height = canvassize;
@@ -173,7 +171,6 @@ function apply__settings() {
 	maxmoves = adjust_maxmoves(fieldsize, ncolors);
 	realloc_field(fieldsize);
 	document.getElementById('settings_wrapper').style.display = "none";
-
 
 	init();
 }
