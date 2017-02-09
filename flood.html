@@ -72,9 +72,12 @@ function check_won() {
 }
 
 function flood_fill(fill_color) {
-	pixel_stack = [[0, 0]];
-	start_color = field[0][0];
+	var start_color = field[0][0];
+	if (start_color == fill_color) {
+		return;
+	}
 
+	var pixel_stack = [[0, 0]];
 	while (pixel_stack.length) {
 		var newPos = pixel_stack.pop();
 		var x = newPos[0];
