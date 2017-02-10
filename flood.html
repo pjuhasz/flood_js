@@ -74,7 +74,7 @@ function check_won() {
 function flood_fill(fill_color) {
 	var start_color = field[0][0];
 	if (start_color == fill_color) {
-		return;
+		return false;
 	}
 
 	var pixel_stack = [[0, 0]];
@@ -117,16 +117,21 @@ function flood_fill(fill_color) {
 			y++;
 		}
 	}
+	return true;
 }
 
 function move(idx) {
 	if (!running) {
 		return;
 	}
-	moves--;
 
-	flood_fill(idx);
+	var changed = flood_fill(idx);
+	if (!changed) {
+		return;
+	}
 	drawfield();
+
+	moves--;
 
 	update_counter();
 
