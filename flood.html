@@ -35,6 +35,41 @@ var canvassize = 504;
 var field;
 realloc_field(fieldsize);
 
+// -_-
+var scores = {
+	"wins":   {"12": { "4":0, "6": 0, "8": 0}, "18":{"4": 0, "6": 0, "8": 0}, "24":{"4": 0, "6": 0, "8": 0}},
+	"losses":  {"12": { "4":0, "6": 0, "8": 0}, "18":{"4": 0, "6": 0, "8": 0}, "24":{"4": 0, "6": 0, "8": 0}},
+	"record": {"12": { "4":0, "6": 0, "8": 0}, "18":{"4": 0, "6": 0, "8": 0}, "24":{"4": 0, "6": 0, "8": 0}}
+};
+
+function save_scores() {
+	if (typeof(Storage) !== "undefined") {
+		localStorage.setItem('flood_js_scores', JSON.stringify(scores));
+	}
+}
+
+function load_scores() {
+	if (typeof(Storage) !== "undefined") {
+		var json = localStorage.getItem('flood_js_scores');
+		if (json !== null && json !== 'null') {
+			scores = JSON.parse(json);
+		}
+	}
+}
+
+function update_scores() {
+	if (scores) {
+		if (moves > 0) {
+			scores["wins"][fieldsize][ncolors]++;
+		} else {
+			scores["losses"][fieldsize][ncolors]++;
+		}
+		if (moves > scores["record"][fieldsize][ncolors]) {
+			scores["record"][fieldsize][ncolors] = moves;
+		}
+	}
+}
+
 function initfield() {
 	for (var j = 0; j < fieldsize; j++) {
 		for (var i = 0; i < fieldsize; i++) {
@@ -56,7 +91,12 @@ function drawfield() {
 }
 
 function update_counter() {
-	document.getElementById("move_counter").innerHTML = moves+"/"+maxmoves;
+	document.getElementById("move_counter").innerHTML = 
+		moves + "/" + maxmoves +
+		"&nbsp;&nbsp;" +
+		"☹" + scores["losses"][fieldsize][ncolors] + //敗
+		"&nbsp;" +
+		"☺" + scores["wins"][fieldsize][ncolors]; //勝
 }
 
 function check_won() {
@@ -142,6 +182,11 @@ function move(idx) {
 		alert("No more moves");
 		running = false;
 	}
+	if (!running) {
+		update_scores();
+		save_scores();
+		update_counter();
+	}
 }
 
 function restart() {
@@ -166,12 +211,13 @@ function init() {
 	document.getElementById("outer").style.display = "block";
 	document.getElementById("no_javashit").style.display = "none";
 
-
 	var cfield = document.getElementById("cfield");  
 	cfield.width = canvassize;
 	cfield.height = canvassize;
 
 	update_counter();
+
+	load_scores();
 
 	restart();
 }
