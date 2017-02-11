@@ -59,9 +59,9 @@ function load_scores() {
 	}
 }
 
-function update_scores() {
+function update_scores(won) {
 	if (scores) {
-		if (moves > 0) {
+		if (won) {
 			scores["wins"][fieldsize][ncolors]++;
 		} else {
 			scores["losses"][fieldsize][ncolors]++;
@@ -177,7 +177,8 @@ function move(idx) {
 
 	update_counter();
 
-	if (check_won()) {
+	var won = check_won();
+	if (won) {
 		alert("You won!");
 		running = false;
 	} else if (moves == 0) {
@@ -185,7 +186,7 @@ function move(idx) {
 		running = false;
 	}
 	if (!running) {
-		update_scores();
+		update_scores(won);
 		save_scores();
 		update_counter();
 	}
