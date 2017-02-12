@@ -16,7 +16,7 @@ The goal is to paint the entire board with a single color - within a pre-determi
 Installation
 ------------
 
-Clone the repo or just download [flood.html](flood.html) and open it in the browser.
+Clone the repo, download [flood.html](flood.html) and open it in the browser, or just go to [my github.io page](https://pjuhasz.github.io/flood_js/flood.html).
 
 Excuses^WMotivation
 -------------------
