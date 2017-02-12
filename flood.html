@@ -95,7 +95,7 @@ function drawfield() {
 function update_counter() {
 	document.getElementById("move_counter").innerHTML = 
 		moves + "/" + maxmoves +
-		"&nbsp;&nbsp;" +
+		"&nbsp;" +
 		"☹" + scores["losses"][fieldsize][ncolors] + //敗
 		"&nbsp;" +
 		"☺" + scores["wins"][fieldsize][ncolors]; //勝
@@ -315,7 +315,7 @@ body {
 .buttony {
 	align: right;
 	border: none;
-	padding: 10px 15px;
+	padding: 10px 10px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
